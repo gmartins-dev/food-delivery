@@ -2,16 +2,13 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getRestaurantsByOutcode, type Restaurant } from "@/lib/api";
+import { getRestaurantsByOutcode, type Restaurant, type SearchResponse } from "@/lib/api";
 import { SearchForm } from "@/components/restaurant/search-form";
 import { CuisineFilter } from "@/components/restaurant/cuisine-filter";
 import { RestaurantGrid } from "@/components/restaurant/restaurant-grid";
 import { MapPin as MapPinIcon, AlertTriangle } from "lucide-react";
 import { LoadingScreen } from "@/components/restaurant/loading-screen";
 
-/**
- * Main page component following PIE Design System
- */
 export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -21,8 +18,8 @@ export default function Home() {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [results, setResults] = useState<SearchResponse | null>(null);
 
-  // Fetch restaurants when outcode changes
   useEffect(() => {
     async function fetchRestaurants() {
       if (!currentOutcode) return;
@@ -32,10 +29,11 @@ export default function Home() {
 
       try {
         const data = await getRestaurantsByOutcode(currentOutcode);
-        setRestaurants(data.restaurants || []);
+        setRestaurants(data.restaurants);
+        setResults(data);
       } catch (err) {
-        console.error("Error fetching restaurants:", err);
         setError("Failed to load restaurants. Please try again.");
+        console.error('Error:', err);
       } finally {
         setIsLoading(false);
       }
@@ -44,7 +42,6 @@ export default function Home() {
     fetchRestaurants();
   }, [currentOutcode]);
 
-  // Extract all unique cuisines from restaurants
   const cuisines = useMemo(() => {
     if (!restaurants.length) return [];
 
@@ -61,7 +58,6 @@ export default function Home() {
     return Array.from(cuisineMap.values());
   }, [restaurants]);
 
-  // Filter restaurants based on selected cuisines
   const filteredRestaurants = useMemo(() => {
     if (!restaurants.length) return [];
 
@@ -76,13 +72,23 @@ export default function Home() {
     );
   }, [restaurants, selectedCuisines]);
 
-  // Handle search form submission
-  const handleSearch = (outcode: string) => {
-    setSelectedCuisines([]); // Reset filters on new search
-    router.push(`/?outcode=${outcode}`);
+  const handleSearch = async (outcode: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      router.replace(`/?outcode=${outcode}`);
+      const data = await getRestaurantsByOutcode(outcode);
+      setRestaurants(data.restaurants);
+      setResults(data);
+    } catch (err) {
+      setError('Failed to load restaurants. Please try again.');
+      console.error('Search error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  // Handle cuisine filter toggle
   const handleCuisineChange = (cuisineId: string) => {
     setSelectedCuisines((prev) =>
       prev.includes(cuisineId)
@@ -91,7 +97,6 @@ export default function Home() {
     );
   };
 
-  // Clear all filters
   const clearFilters = () => {
     setSelectedCuisines([]);
   };
@@ -99,7 +104,6 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white dark:bg-neutral-950">
       <div className="container px-4 py-12 sm:py-20 max-w-[1400px] mx-auto">
-        {/* Search section */}
         <section className="w-full max-w-2xl mx-auto space-y-8">
           <div className="space-y-3 text-center">
             <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-neutral-900 dark:text-white">
@@ -118,7 +122,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Error message */}
         {error ? (
           <div className="rounded-xl p-6 border border-red-200 bg-red-50 dark:bg-red-950/50 dark:border-red-900/50 max-w-2xl mx-auto mt-8 flex gap-3 items-center">
             <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0" />
@@ -126,7 +129,6 @@ export default function Home() {
           </div>
         ) : null}
 
-        {/* No results message */}
         {currentOutcode && !isLoading && restaurants.length === 0 ? (
           <div className="rounded-xl p-6 border border-amber-200 bg-amber-50 dark:bg-amber-950/50 dark:border-amber-900/50 max-w-2xl mx-auto mt-8">
             <p className="font-medium text-amber-900 dark:text-amber-200">No restaurants found for outcode "{currentOutcode.toUpperCase()}"</p>
@@ -134,11 +136,9 @@ export default function Home() {
           </div>
         ) : null}
 
-        {/* Restaurant results */}
         {currentOutcode && restaurants.length > 0 ? (
           <section className="max-w-[1400px] mx-auto mt-16">
             <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
-              {/* Sidebar filter */}
               <aside className="w-full lg:sticky lg:top-8 h-fit">
                 <div className="rounded-xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900 p-6 shadow-sm dark:shadow-2xl dark:shadow-neutral-950/50">
                   <CuisineFilter
@@ -150,7 +150,6 @@ export default function Home() {
                 </div>
               </aside>
 
-              {/* Restaurant grid */}
               <div className="space-y-8">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <h2 className="text-2xl font-semibold text-neutral-900 dark:text-white">
@@ -175,7 +174,6 @@ export default function Home() {
           </section>
         ) : null}
 
-        {/* Loading state overlay */}
         {isLoading && <LoadingScreen />}
       </div>
     </main>

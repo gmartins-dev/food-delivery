@@ -1,6 +1,6 @@
-# Just Eat Restaurant Finder
+# Food Delivery App
 
-A modern web application that allows users to search for restaurants that deliver to their area using the Just Eat API. Users can enter their outcode (first part of a UK postcode) and filter restaurants by cuisine type.
+A modern web application that allows users to search for restaurants that deliver to their area using the Just Eat API based on their outcode (first part of a UK postcode) and also filter restaurants by cuisine type.
 
 This application follows the **PIE Design System** - Just Eat Takeaway.com's global design system for interfaces and experiences, ensuring consistency with the Just Eat brand.
 

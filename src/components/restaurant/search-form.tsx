@@ -16,11 +16,11 @@ interface SearchFormProps {
 /**
  * SearchForm component following PIE Design System
  */
-export function SearchForm({
+export const SearchForm = ({
   onSearch,
   initialOutcode = "",
   isLoading = false
-}: SearchFormProps) {
+}: SearchFormProps) => {
   const [outcode, setOutcode] = useState(initialOutcode);
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -62,13 +62,20 @@ export function SearchForm({
     }
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitted(true);
 
-    if (validateOutcode(outcode)) {
-      onSearch(outcode.toLowerCase());
+    if (!outcode) {
+      setError("Please enter an outcode");
+      return;
     }
+
+    if (!validateOutcode(outcode)) {
+      return;
+    }
+
+    onSearch(outcode.toLowerCase());
   };
 
   return (
@@ -87,19 +94,23 @@ export function SearchForm({
       >
         <div className="flex-1 min-w-0">
           <Input
+            name="outcode"
             ref={inputRef}
             value={outcode}
             onChange={handleChange}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             placeholder="Enter outcode (e.g. ec4m)"
-            error={!!error}
-            helperText={error || undefined}
-            className="h-12 text-base bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800/80 text-neutral-900 dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-600"
-            disabled={isLoading}
-            aria-invalid={error ? "true" : "false"}
+            aria-invalid={!!error}
             aria-describedby={error ? "outcode-error" : undefined}
+            disabled={isLoading}
+            className="h-12 text-base bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800/80"
           />
+          {error && (
+            <p id="outcode-error" className="mt-2 text-sm text-red-600 dark:text-red-400">
+              {error}
+            </p>
+          )}
         </div>
 
         <Button
