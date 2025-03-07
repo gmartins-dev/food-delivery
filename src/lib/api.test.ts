@@ -37,6 +37,7 @@ describe("Restaurant API", () => {
     // This is just a demonstration of how we would structure a test
     // In a real test, we would mock the fetch response with realistic data
 
+    // @ts-expect-error - To be used in upcoming tests
     const _mockRestaurantData = {
       restaurants: [
         {

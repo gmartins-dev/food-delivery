@@ -40,15 +40,19 @@ interface AvatarImageProps extends Omit<ImageProps, 'src'> {
 const AvatarImage = React.forwardRef<HTMLImageElement, AvatarImageProps>(
   ({ className, alt, src, ...props }, ref) => {
     return (
-      <Image
-        src={src}
-        alt={alt || ""}
-        fill
-        sizes="100%"
-        className={cn("aspect-square h-full w-full object-cover", className)}
-        ref={ref}
-        {...props}
-      />
+      <>
+        {src && (
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            className={cn("aspect-square h-full w-full", className)}
+            style={{ objectFit: "cover" }}
+            ref={ref}
+            {...props}
+          />
+        )}
+      </>
     )
   }
 )

@@ -1,4 +1,3 @@
-// Types
 export interface CuisineType {
   Name: string;
   SeoName: string;

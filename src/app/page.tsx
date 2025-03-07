@@ -9,7 +9,8 @@ import { RestaurantGrid } from "@/components/restaurant/restaurant-grid";
 import { MapPin as MapPinIcon, AlertTriangle } from "lucide-react";
 import { LoadingScreen } from "@/components/restaurant/loading-screen";
 
-function RestaurantSearch() {
+// Separate the part that uses useSearchParams into its own component
+function SearchContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentOutcode = searchParams?.get("outcode") ?? "";
@@ -117,7 +118,7 @@ function RestaurantSearch() {
         </div>
       ) : null}
 
-      {currentOutcode && !isLoading && restaurants.length === 0 ? (
+      {currentOutcode && !isLoading && restaurants.length === 0 && results !== null ? (
         <div className="rounded-xl p-6 border border-amber-200 bg-amber-50 dark:bg-amber-950/50 dark:border-amber-900/50 max-w-2xl mx-auto mt-8">
           <p className="font-medium text-amber-900 dark:text-amber-200">No restaurants found for outcode "{currentOutcode.toUpperCase()}"</p>
           <p className="text-amber-700 dark:text-amber-300/80 mt-2">Try searching for a different outcode.</p>
@@ -168,14 +169,18 @@ function RestaurantSearch() {
   );
 }
 
-export default function HomePage() {
+function RestaurantSearch() {
   return (
     <Suspense fallback={<LoadingScreen />}>
-      <main className="min-h-screen bg-white dark:bg-neutral-950">
-        <Suspense fallback={<LoadingScreen />}>
-          <RestaurantSearch />
-        </Suspense>
-      </main>
+      <SearchContent />
     </Suspense>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <main className="min-h-screen bg-white dark:bg-neutral-950">
+      <RestaurantSearch />
+    </main>
   );
 }
