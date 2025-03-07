@@ -12,7 +12,7 @@ import { LoadingScreen } from "@/components/restaurant/loading-screen";
 function RestaurantSearch() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentOutcode = searchParams.get("outcode") || "";
+  const currentOutcode = searchParams?.get("outcode") ?? "";
 
   const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
@@ -170,10 +170,10 @@ function RestaurantSearch() {
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-white dark:bg-neutral-950">
-      <Suspense fallback={<LoadingScreen />}>
+    <Suspense fallback={<LoadingScreen />}>
+      <main className="min-h-screen bg-white dark:bg-neutral-950">
         <RestaurantSearch />
-      </Suspense>
-    </main>
+      </main>
+    </Suspense>
   );
 }
