@@ -217,13 +217,13 @@ export function getConsistentImage(images: string[], id: string): string {
  */
 export function getFoodImageForRestaurant(restaurant: {
   id: string;
-  cuisines: Array<{ id: string; name: string }>
+  cuisines: Array<{ Name: string; SeoName: string }>
 }): string {
   // Find matching category based on cuisine
   let matchedCategory: FoodImageCategory | undefined;
 
   // Try to find an exact category match
-  const cuisineNames = restaurant.cuisines.map(c => c.name.toLowerCase());
+  const cuisineNames = restaurant.cuisines.map(c => c.Name.toLowerCase());
 
   for (const category of foodImageCategories) {
     if (category.keywords.some(keyword =>
@@ -241,4 +241,35 @@ export function getFoodImageForRestaurant(restaurant: {
 
   // Use restaurant ID to consistently select an image from the category
   return getConsistentImage(matchedCategory.images, restaurant.id);
+}
+
+/**
+ * Gets a food image URL based on the cuisine type
+ */
+export function getFoodImageUrl(restaurant: {
+  cuisines: Array<{ Name: string; SeoName: string }>
+}): string {
+  if (!restaurant?.cuisines || restaurant.cuisines.length === 0) {
+    // Return a random default image if no cuisines
+    const defaultCategory = foodImageCategories.find(c => c.name === 'Default');
+    const images = defaultCategory?.images || [];
+    return images[Math.floor(Math.random() * images.length)];
+  }
+
+  // Try to find an exact category match
+  const cuisineNames = restaurant.cuisines.map(c => c.Name.toLowerCase());
+
+  for (const category of foodImageCategories) {
+    if (category.keywords.some(keyword =>
+      cuisineNames.some(cuisine => cuisine.includes(keyword))
+    )) {
+      const images = category.images;
+      return images[Math.floor(Math.random() * images.length)];
+    }
+  }
+
+  // If no match found, return a random default image
+  const defaultCategory = foodImageCategories.find(c => c.name === 'Default');
+  const images = defaultCategory?.images || [];
+  return images[Math.floor(Math.random() * images.length)];
 }

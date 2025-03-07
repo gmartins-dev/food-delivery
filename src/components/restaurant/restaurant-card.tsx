@@ -11,12 +11,13 @@ import { getFoodImageForRestaurant } from "@/lib/food-images";
 
 interface RestaurantCardProps {
   restaurant: Restaurant;
+  onCuisineClick?: (seoName: string) => void;
 }
 
 /**
  * RestaurantCard component following PIE Design System
  */
-export function RestaurantCard({ restaurant }: RestaurantCardProps) {
+export function RestaurantCard({ restaurant, onCuisineClick }: RestaurantCardProps) {
   const [imageError, setImageError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -137,15 +138,20 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
           <div className="flex flex-wrap gap-1.5">
             {restaurant.cuisines.slice(0, 3).map((cuisine) => (
               <Badge
-                key={cuisine.id}
+                key={cuisine.SeoName}
                 variant="secondary"
                 className={cn(
                   "text-xs bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700",
-                  "transition-all duration-200",
+                  "transition-all duration-200 cursor-pointer",
                   isHovered ? "translate-y-[-2px]" : ""
                 )}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onCuisineClick?.(cuisine.SeoName);
+                }}
               >
-                {cuisine.name}
+                {cuisine.Name}
               </Badge>
             ))}
           </div>

@@ -28,15 +28,12 @@ export default function Home() {
       setError(null);
 
       try {
-        // TODO: should remove this in production, artificial delay for demo purposes only
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
         const data = await getRestaurantsByOutcode(currentOutcode);
+        setRestaurants(data.restaurants);
         setResults(data);
-        setRestaurants(data.restaurants || []);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch restaurants');
-        setRestaurants([]);
+        setError("Failed to load restaurants. Please try again.");
+        console.error('Error:', err);
       } finally {
         setIsLoading(false);
       }
@@ -45,21 +42,10 @@ export default function Home() {
     fetchRestaurants();
   }, [currentOutcode]);
 
-  const cuisines = useMemo(() => {
-    if (!restaurants.length) return [];
-
-    const cuisineMap = new Map<string, { id: string; name: string }>();
-
-    restaurants.forEach((restaurant) => {
-      restaurant.cuisines.forEach((cuisine) => {
-        if (!cuisineMap.has(cuisine.id)) {
-          cuisineMap.set(cuisine.id, cuisine);
-        }
-      });
-    });
-
-    return Array.from(cuisineMap.values());
-  }, [restaurants]);
+  const availableCuisines = useMemo(() => {
+    if (!results?.CuisineDetails) return [];
+    return results.CuisineDetails;
+  }, [results]);
 
   const filteredRestaurants = useMemo(() => {
     if (!restaurants.length) return [];
@@ -69,8 +55,8 @@ export default function Home() {
     }
 
     return restaurants.filter((restaurant) =>
-      restaurant.cuisines.some((cuisine) =>
-        selectedCuisines.includes(cuisine.id)
+      restaurant.CuisineTypes.some((cuisine) =>
+        selectedCuisines.includes(cuisine.SeoName)
       )
     );
   }, [restaurants, selectedCuisines]);
@@ -92,11 +78,11 @@ export default function Home() {
     }
   };
 
-  const handleCuisineChange = (cuisineId: string) => {
+  const handleCuisineChange = (seoName: string) => {
     setSelectedCuisines((prev) =>
-      prev.includes(cuisineId)
-        ? prev.filter((id) => id !== cuisineId)
-        : [...prev, cuisineId]
+      prev.includes(seoName)
+        ? prev.filter((name) => name !== seoName)
+        : [...prev, seoName]
     );
   };
 
@@ -145,7 +131,7 @@ export default function Home() {
               <aside className="w-full lg:sticky lg:top-8 h-fit">
                 <div className="rounded-xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900 p-6 shadow-sm dark:shadow-2xl dark:shadow-neutral-950/50">
                   <CuisineFilter
-                    cuisines={cuisines}
+                    cuisines={availableCuisines}
                     selectedCuisines={selectedCuisines}
                     onCuisineChange={handleCuisineChange}
                     onClearFilters={clearFilters}
@@ -170,6 +156,7 @@ export default function Home() {
                   <RestaurantGrid
                     restaurants={filteredRestaurants}
                     isLoading={isLoading}
+                    onCuisineClick={handleCuisineChange}
                   />
                 </div>
               </div>

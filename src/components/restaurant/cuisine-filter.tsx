@@ -13,10 +13,16 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+interface CuisineDetail {
+  SeoName: string;
+  Name: string;
+  Total: number;
+}
+
 interface CuisineFilterProps {
-  cuisines: Array<{ id: string; name: string }>;
+  cuisines: CuisineDetail[];
   selectedCuisines: string[];
-  onCuisineChange: (cuisineId: string) => void;
+  onCuisineChange: (seoName: string) => void;
   onClearFilters: () => void;
 }
 
@@ -120,9 +126,9 @@ export function CuisineFilter({
   onCuisineChange,
   onClearFilters,
 }: CuisineFilterProps) {
-  // Sort cuisines alphabetically
+  // Sort cuisines by count (highest to lowest)
   const sortedCuisines = React.useMemo(() => {
-    return [...cuisines].sort((a, b) => a.name.localeCompare(b.name));
+    return [...cuisines].sort((a, b) => b.Total - a.Total);
   }, [cuisines]);
 
   return (
@@ -154,13 +160,13 @@ export function CuisineFilter({
         <ScrollArea className="h-[320px] pr-3 -mr-3">
           <div className="grid grid-cols-1 gap-2">
             {sortedCuisines.map((cuisine) => {
-              const isSelected = selectedCuisines.includes(cuisine.id);
-              const Icon = getCuisineIcon(cuisine.name);
+              const isSelected = selectedCuisines.includes(cuisine.SeoName);
+              const Icon = getCuisineIcon(cuisine.Name);
 
               return (
                 <button
-                  key={cuisine.id}
-                  onClick={() => onCuisineChange(cuisine.id)}
+                  key={cuisine.SeoName}
+                  onClick={() => onCuisineChange(cuisine.SeoName)}
                   className={cn(
                     "flex items-center justify-between p-3 rounded-lg text-sm font-medium transition-all duration-200",
                     "border focus:outline-none focus:ring-2 focus:ring-primary-500/20",
@@ -172,23 +178,12 @@ export function CuisineFilter({
                   aria-pressed={isSelected}
                   role="checkbox"
                 >
-                  <span className="flex items-center gap-2.5">
-                    <Icon className={cn(
-                      "h-4 w-4",
-                      isSelected
-                        ? "text-primary-600 dark:text-primary-400"
-                        : "text-neutral-500 dark:text-neutral-400"
-                    )} />
-                    {cuisine.name}
-                  </span>
-                  <div className={cn(
-                    "h-4 w-4 rounded-sm border flex items-center justify-center transition-colors",
-                    isSelected
-                      ? "bg-primary-600 border-primary-700 dark:bg-primary-500 dark:border-primary-600"
-                      : "border-neutral-300 dark:border-neutral-700"
-                  )}>
-                    {isSelected && <CheckIcon className="h-3 w-3 text-white" />}
+                  <div className="flex items-center gap-2">
+                    <Icon className="h-4 w-4" />
+                    <span>{cuisine.Name}</span>
+                    <span className="text-xs text-neutral-500">({cuisine.Total})</span>
                   </div>
+                  {isSelected && <CheckIcon className="h-4 w-4" />}
                 </button>
               );
             })}
@@ -207,9 +202,9 @@ export function CuisineFilter({
             </p>
           </div>
           <p className="text-sm font-medium line-clamp-2 text-neutral-900 dark:text-white">
-            {selectedCuisines.map((id) => {
-              const cuisine = cuisines.find(c => c.id === id);
-              return cuisine ? cuisine.name : '';
+            {selectedCuisines.map((seoName) => {
+              const cuisine = cuisines.find(c => c.SeoName === seoName);
+              return cuisine ? cuisine.Name : '';
             }).filter(Boolean).join(', ')}
           </p>
         </div>

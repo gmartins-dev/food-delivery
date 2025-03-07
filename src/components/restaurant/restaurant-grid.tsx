@@ -10,9 +10,10 @@ import { Button } from "@/components/ui/button";
 interface RestaurantGridProps {
   restaurants: Restaurant[];
   isLoading?: boolean;
+  onCuisineClick?: (seoName: string) => void;
 }
 
-export function RestaurantGrid({ restaurants, isLoading = false }: RestaurantGridProps) {
+export function RestaurantGrid({ restaurants, isLoading = false, onCuisineClick }: RestaurantGridProps) {
   const [currentPage, setCurrentPage] = React.useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(restaurants.length / itemsPerPage);
@@ -52,7 +53,11 @@ export function RestaurantGrid({ restaurants, isLoading = false }: RestaurantGri
   return (
     <>
       {paginatedRestaurants.map((restaurant) => (
-        <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+        <RestaurantCard
+          key={restaurant.id}
+          restaurant={restaurant}
+          onCuisineClick={onCuisineClick}
+        />
       ))}
 
       {totalPages > 1 && (

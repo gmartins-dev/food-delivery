@@ -1,4 +1,9 @@
 // Types
+export interface CuisineType {
+  Name: string;
+  SeoName: string;
+}
+
 export interface Restaurant {
   id: string;
   name: string;
@@ -6,10 +11,8 @@ export interface Restaurant {
     starRating: number;
     count: number;
   };
-  cuisines: Array<{
-    id: string;
-    name: string;
-  }>;
+  cuisines: CuisineType[];
+  CuisineTypes: CuisineType[]; // Adding new field from API
   logoUrl: string;
   isOpenNow: boolean;
   deliveryEtaMinutes?: {
@@ -23,8 +26,15 @@ export interface Restaurant {
   };
 }
 
+export interface CuisineDetail {
+  Name: string;
+  SeoName: string;
+  Total: number;
+}
+
 export interface SearchResponse {
   restaurants: Restaurant[];
+  CuisineDetails: CuisineDetail[];
   filterGroups?: Array<{
     name: string;
     filters: Array<{
@@ -66,6 +76,29 @@ export interface JustEatResponse {
 
 // Transform JustEat response to our format
 function transformResponse(response: JustEatResponse): SearchResponse {
+  // Create a map to count cuisine occurrences
+  const cuisineCount = new Map<string, { name: string; count: number }>();
+
+  // Count cuisines across all restaurants
+  response.Restaurants.forEach(restaurant => {
+    restaurant.Cuisines.forEach(cuisine => {
+      const seoName = cuisine.Name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      if (!cuisineCount.has(seoName)) {
+        cuisineCount.set(seoName, { name: cuisine.Name, count: 1 });
+      } else {
+        const current = cuisineCount.get(seoName)!;
+        cuisineCount.set(seoName, { ...current, count: current.count + 1 });
+      }
+    });
+  });
+
+  // Transform to CuisineDetails array
+  const cuisineDetails = Array.from(cuisineCount.entries()).map(([seoName, data]) => ({
+    Name: data.name,
+    SeoName: seoName,
+    Total: data.count
+  }));
+
   return {
     restaurants: (response.Restaurants || []).map(r => ({
       id: r.Id.toString(),
@@ -75,14 +108,19 @@ function transformResponse(response: JustEatResponse): SearchResponse {
         count: r.Rating?.Count || 0
       },
       cuisines: (r.Cuisines || []).map(c => ({
-        id: c.Id,
-        name: c.Name
+        Name: c.Name,
+        SeoName: c.Name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+      })),
+      CuisineTypes: (r.Cuisines || []).map(c => ({
+        Name: c.Name,
+        SeoName: c.Name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
       })),
       logoUrl: r.LogoUrl,
       isOpenNow: r.IsOpenNow,
       deliveryEtaMinutes: r.DeliveryEtaMinutes,
       address: r.Address
-    }))
+    })),
+    CuisineDetails: cuisineDetails
   };
 }
 
