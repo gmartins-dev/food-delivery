@@ -172,7 +172,9 @@ export default function HomePage() {
   return (
     <Suspense fallback={<LoadingScreen />}>
       <main className="min-h-screen bg-white dark:bg-neutral-950">
-        <RestaurantSearch />
+        <Suspense fallback={<LoadingScreen />}>
+          <RestaurantSearch />
+        </Suspense>
       </main>
     </Suspense>
   );
