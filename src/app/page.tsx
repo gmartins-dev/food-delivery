@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getRestaurantsByOutcode, type Restaurant, type SearchResponse } from "@/lib/api";
 import { SearchForm } from "@/components/restaurant/search-form";
@@ -9,7 +9,7 @@ import { RestaurantGrid } from "@/components/restaurant/restaurant-grid";
 import { MapPin as MapPinIcon, AlertTriangle } from "lucide-react";
 import { LoadingScreen } from "@/components/restaurant/loading-screen";
 
-export default function Home() {
+function SearchContainer() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentOutcode = searchParams.get("outcode") || "";
@@ -165,6 +165,18 @@ export default function Home() {
         ) : null}
 
         {isLoading && <LoadingScreen />}
+      </div>
+    </main>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <main className="flex-1 py-8">
+      <div className="container px-4 md:px-6">
+        <Suspense fallback={<LoadingScreen />}>
+          <SearchContainer />
+        </Suspense>
       </div>
     </main>
   );

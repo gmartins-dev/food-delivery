@@ -12,7 +12,7 @@ export interface Restaurant {
     count: number;
   };
   cuisines: CuisineType[];
-  CuisineTypes: CuisineType[]; // Adding new field from API
+  CuisineTypes: CuisineType[];
   logoUrl: string;
   isOpenNow: boolean;
   deliveryEtaMinutes?: {
@@ -72,35 +72,6 @@ export interface JustEatResponse {
   Area: string;
   Restaurants: JustEatRestaurant[];
   // ...other fields we don't need
-}
-
-// Add interface for API response
-interface ApiRestaurant {
-  Id: string;
-  Name: string;
-  Rating: {
-    StarRating: number;
-    Count: number;
-  };
-  CuisineTypes: {
-    Name: string;
-    SeoName: string;
-  }[];
-  LogoUrl: string;
-  IsOpenNow: boolean;
-  DeliveryEtaMinutes?: {
-    RangeLower: number;
-    RangeUpper: number;
-  };
-  Address?: {
-    FirstLine: string;
-    City: string;
-    PostalCode: string;
-  };
-}
-
-interface ApiResponse {
-  Restaurants: ApiRestaurant[];
 }
 
 // Transform JustEat response to our format

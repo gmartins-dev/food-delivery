@@ -1,5 +1,6 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
+import Image, { ImageProps, StaticImageData } from "next/image"
 
 /**
  * Avatar component based on PIE Design System
@@ -32,15 +33,20 @@ const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
 )
 Avatar.displayName = "Avatar"
 
-interface AvatarImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
+interface AvatarImageProps extends Omit<ImageProps, 'src'> {
+  src: string | StaticImageData;
+}
 
 const AvatarImage = React.forwardRef<HTMLImageElement, AvatarImageProps>(
-  ({ className, alt, ...props }, ref) => {
+  ({ className, alt, src, ...props }, ref) => {
     return (
-      <img
+      <Image
+        src={src}
+        alt={alt || ""}
+        fill
+        sizes="100%"
         className={cn("aspect-square h-full w-full object-cover", className)}
         ref={ref}
-        alt={alt}
         {...props}
       />
     )
