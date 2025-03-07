@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { CheckIcon, XCircle, Filter,
+import { CheckIcon, XCircle, Filter, Search,
   Pizza, Coffee, Beef, Apple, Sandwich, Fish,
   UtensilsCrossed, Salad, Egg, IceCream, Bean,
   Drumstick, Soup, Martini, Croissant,
@@ -126,10 +126,16 @@ export function CuisineFilter({
   onCuisineChange,
   onClearFilters,
 }: CuisineFilterProps) {
-  // Sort cuisines by count (highest to lowest)
-  const sortedCuisines = React.useMemo(() => {
-    return [...cuisines].sort((a, b) => b.Total - a.Total);
-  }, [cuisines]);
+  const [searchText, setSearchText] = React.useState("");
+
+  // Sort cuisines by count and filter by search text
+  const filteredCuisines = React.useMemo(() => {
+    return [...cuisines]
+      .sort((a, b) => b.Total - a.Total)
+      .filter((cuisine) =>
+        cuisine.Name.toLowerCase().includes(searchText.toLowerCase())
+      );
+  }, [cuisines, searchText]);
 
   return (
     <div className="w-full">
@@ -157,45 +163,63 @@ export function CuisineFilter({
           No cuisines available for filtering
         </div>
       ) : (
-        <div className="h-[330px] pr-3 -mr-3 overflow-y-auto
-          scrollbar-thin
-          scrollbar-thumb-rounded-full
-          scrollbar-track-transparent
-          scrollbar-thumb-neutral-200
-          hover:scrollbar-thumb-neutral-300
-          dark:scrollbar-thumb-neutral-800
-          dark:hover:scrollbar-thumb-neutral-700">
-          <div className="grid grid-cols-1 gap-2">
-            {sortedCuisines.map((cuisine) => {
-              const isSelected = selectedCuisines.includes(cuisine.SeoName);
-              const Icon = getCuisineIcon(cuisine.Name);
-
-              return (
-                <button
-                  key={cuisine.SeoName}
-                  onClick={() => onCuisineChange(cuisine.SeoName)}
-                  className={cn(
-                    "flex items-center justify-between p-3 rounded-lg text-sm font-medium transition-all duration-200",
-                    "border focus:outline-none focus:ring-2 focus:ring-primary-500/20",
-                    "hover:border-primary-500/30 hover:scale-[1.02]",
-                    isSelected
-                      ? "bg-primary-50 text-primary-700 border-primary-200 dark:bg-primary-950/30 dark:text-primary-300 dark:border-primary-900/50"
-                      : "border-neutral-200 bg-white text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200",
-                  )}
-                  aria-pressed={isSelected}
-                  role="checkbox"
-                >
-                  <div className="flex items-center gap-2">
-                    <Icon className="h-4 w-4" />
-                    <span>{cuisine.Name}</span>
-                    <span className="text-xs text-neutral-500">({cuisine.Total})</span>
-                  </div>
-                  {isSelected && <CheckIcon className="h-4 w-4" />}
-                </button>
-              );
-            })}
+        <>
+          <div className="mb-3 relative">
+            <input
+              type="text"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              placeholder="Search cuisines..."
+              className="w-full h-9 px-3 pl-9 rounded-md text-sm
+                bg-white dark:bg-neutral-900
+                border border-neutral-200 dark:border-neutral-800
+                text-neutral-900 dark:text-white
+                placeholder:text-neutral-500 dark:placeholder:text-neutral-400
+                focus:outline-none focus:ring-2 focus:ring-primary-500/20
+                focus:border-primary-500/30"
+            />
+            <Search className="h-4 w-4 absolute left-3 top-2.5 text-neutral-500 dark:text-neutral-400" />
           </div>
-        </div>
+          <div className="h-[330px] pr-3 -mr-3 overflow-y-auto
+            scrollbar-thin
+            scrollbar-thumb-rounded-full
+            scrollbar-track-transparent
+            scrollbar-thumb-neutral-200
+            hover:scrollbar-thumb-neutral-300
+            dark:scrollbar-thumb-neutral-800
+            dark:hover:scrollbar-thumb-neutral-700">
+            <div className="grid grid-cols-1 gap-2">
+              {filteredCuisines.map((cuisine) => {
+                const isSelected = selectedCuisines.includes(cuisine.SeoName);
+                const Icon = getCuisineIcon(cuisine.Name);
+
+                return (
+                  <button
+                    key={cuisine.SeoName}
+                    onClick={() => onCuisineChange(cuisine.SeoName)}
+                    className={cn(
+                      "flex items-center justify-between p-3 rounded-lg text-sm font-medium transition-all duration-200",
+                      "border focus:outline-none focus:ring-2 focus:ring-primary-500/20",
+                      "hover:border-primary-500/30 hover:scale-[1.02]",
+                      isSelected
+                        ? "bg-primary-50 text-primary-700 border-primary-200 dark:bg-primary-950/30 dark:text-primary-300 dark:border-primary-900/50"
+                        : "border-neutral-200 bg-white text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200",
+                    )}
+                    aria-pressed={isSelected}
+                    role="checkbox"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Icon className="h-4 w-4" />
+                      <span>{cuisine.Name}</span>
+                      <span className="text-xs text-neutral-500">({cuisine.Total})</span>
+                    </div>
+                    {isSelected && <CheckIcon className="h-4 w-4" />}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </>
       )}
 
       {selectedCuisines.length > 0 && (
