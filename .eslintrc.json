@@ -12,6 +12,6 @@
     "react/no-unescaped-entities": "off",
     "jsx-a11y/role-supports-aria-props": "off",
     "jsx-a11y/role-has-required-aria-props": "warn",
-    "@next/next/no-img-element": "warn"
+    "@next/next/no-img-element": "off"
   }
 }

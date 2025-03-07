@@ -4,6 +4,12 @@ A modern web application that allows users to search for restaurants that delive
 
 This application follows the **PIE Design System** - Just Eat Takeaway.com's global design system for interfaces and experiences, ensuring consistency with the Just Eat brand.
 
+## Live Demo
+
+Check out the live demo of the Food Delivery application:
+
+🚀 [Click here to see the live demo](https://food-delivery-sigma-beryl.vercel.app/)
+
 ## Key features
 
 - 🍽️ Search for restaurants by outcode (first part of UK postcode)
