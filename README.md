@@ -6,15 +6,20 @@ This application follows the **PIE Design System** - Just Eat Takeaway.com's glo
 
 ![Just Eat Restaurant Finder screenshot](https://i.imgur.com/example.png)
 
-## Features
+## Key features
 
-- 🍽️ Search for restaurants by outcode
+- 🍽️ Search for restaurants by outcode (first part of UK postcode)
 - 🍕 Filter restaurants by cuisine type
 - 🌗 Dark and light mode support
 - 📱 Responsive design for mobile, tablet, and desktop
+- 🧩 PIE Design System integration
 - ♿ Accessible UI components
 - ⚡ Fast and optimized performance
-- 🧩 PIE Design System integration
+- 📄 Pagination with 10 restaurants per page
+- 💫 Loading states with skeleton UI
+- 🔄 Error handling with retry mechanism
+- 🎯 Type-safe API integrationtry mechanism
+
 
 ## Tech Stack
 

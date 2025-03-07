@@ -28,12 +28,15 @@ export default function Home() {
       setError(null);
 
       try {
+        // TODO: should remove this in production, artificial delay for demo purposes only
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
         const data = await getRestaurantsByOutcode(currentOutcode);
-        setRestaurants(data.restaurants);
         setResults(data);
+        setRestaurants(data.restaurants || []);
       } catch (err) {
-        setError("Failed to load restaurants. Please try again.");
-        console.error('Error:', err);
+        setError(err instanceof Error ? err.message : 'Failed to fetch restaurants');
+        setRestaurants([]);
       } finally {
         setIsLoading(false);
       }

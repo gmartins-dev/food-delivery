@@ -23,10 +23,8 @@ export function Header() {
             <UtensilsCrossed className="h-5 w-5" />
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center">
-            <span className="text-lg font-bold leading-none text-primary dark:text-primary">Just Eat</span>
-            <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400 sm:ml-2 sm:text-base">
-              Restaurant Finder
-            </span>
+            <span className="text-lg font-bold leading-none text-primary dark:text-primary">Food Delivery</span>
+
           </div>
         </Link>
 
