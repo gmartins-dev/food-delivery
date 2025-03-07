@@ -4,7 +4,7 @@ import * as React from "react";
 import { Restaurant } from "@/lib/api";
 import { RestaurantCard } from "./restaurant-card";
 import { RestaurantSkeleton } from "./loading-skeleton";
-import { UtensilsCrossed, Frown } from "lucide-react";
+import { Frown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface RestaurantGridProps {

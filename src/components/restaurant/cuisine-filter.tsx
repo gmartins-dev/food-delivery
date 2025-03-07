@@ -11,7 +11,6 @@ import { CheckIcon, XCircle, Filter, Search,
   Cookie, Candy, Ham} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface CuisineDetail {
   SeoName: string;
@@ -205,7 +204,7 @@ export function CuisineFilter({
                         ? "bg-primary-50 text-primary-700 border-primary-200 dark:bg-primary-950/30 dark:text-primary-300 dark:border-primary-900/50"
                         : "border-neutral-200 bg-white text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200",
                     )}
-                    aria-pressed={isSelected}
+                    aria-checked={isSelected}
                     role="checkbox"
                   >
                     <div className="flex items-center gap-2">

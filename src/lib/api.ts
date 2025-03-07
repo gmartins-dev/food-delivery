@@ -74,6 +74,35 @@ export interface JustEatResponse {
   // ...other fields we don't need
 }
 
+// Add interface for API response
+interface ApiRestaurant {
+  Id: string;
+  Name: string;
+  Rating: {
+    StarRating: number;
+    Count: number;
+  };
+  CuisineTypes: {
+    Name: string;
+    SeoName: string;
+  }[];
+  LogoUrl: string;
+  IsOpenNow: boolean;
+  DeliveryEtaMinutes?: {
+    RangeLower: number;
+    RangeUpper: number;
+  };
+  Address?: {
+    FirstLine: string;
+    City: string;
+    PostalCode: string;
+  };
+}
+
+interface ApiResponse {
+  Restaurants: ApiRestaurant[];
+}
+
 // Transform JustEat response to our format
 function transformResponse(response: JustEatResponse): SearchResponse {
   // Create a map to count cuisine occurrences
@@ -117,8 +146,15 @@ function transformResponse(response: JustEatResponse): SearchResponse {
       })),
       logoUrl: r.LogoUrl,
       isOpenNow: r.IsOpenNow,
-      deliveryEtaMinutes: r.DeliveryEtaMinutes,
-      address: r.Address
+      deliveryEtaMinutes: r.DeliveryEtaMinutes ? {
+        rangeLower: r.DeliveryEtaMinutes.RangeLower,
+        rangeUpper: r.DeliveryEtaMinutes.RangeUpper
+      } : undefined,
+      address: r.Address ? {
+        firstLine: r.Address.FirstLine,
+        city: r.Address.City,
+        postalCode: r.Address.Postcode
+      } : undefined
     })),
     CuisineDetails: cuisineDetails
   };

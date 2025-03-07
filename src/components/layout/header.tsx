@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { UtensilsCrossed, User } from "lucide-react";
+import { UtensilsCrossed } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 

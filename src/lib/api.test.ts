@@ -35,7 +35,7 @@ describe("Restaurant API", () => {
     // This is just a demonstration of how we would structure a test
     // In a real test, we would mock the fetch response with realistic data
 
-    const mockRestaurantData = {
+    const _mockRestaurantData = {
       restaurants: [
         {
           id: "1",

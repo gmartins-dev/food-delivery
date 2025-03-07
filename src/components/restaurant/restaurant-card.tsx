@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { Restaurant } from "@/lib/api";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { StarIcon, Utensils, Clock, MapPin, Tag, ExternalLink } from "lucide-react";
+import { StarIcon, Clock, MapPin, Tag, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { getFoodImageForRestaurant } from "@/lib/food-images";

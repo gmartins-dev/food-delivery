@@ -28,8 +28,6 @@ const config: Config = {
   			background: colors.background,
   			foreground: colors.foreground,
   			primary: {
-  				DEFAULT: colors.primary.DEFAULT,
-  				foreground: colors.primary.foreground,
   				...colors.primary
   			},
   			secondary: {
