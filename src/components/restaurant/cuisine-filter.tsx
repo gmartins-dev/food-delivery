@@ -157,7 +157,14 @@ export function CuisineFilter({
           No cuisines available for filtering
         </div>
       ) : (
-        <ScrollArea className="h-[320px] pr-3 -mr-3">
+        <div className="h-[330px] pr-3 -mr-3 overflow-y-auto
+          scrollbar-thin
+          scrollbar-thumb-rounded-full
+          scrollbar-track-transparent
+          scrollbar-thumb-neutral-200
+          hover:scrollbar-thumb-neutral-300
+          dark:scrollbar-thumb-neutral-800
+          dark:hover:scrollbar-thumb-neutral-700">
           <div className="grid grid-cols-1 gap-2">
             {sortedCuisines.map((cuisine) => {
               const isSelected = selectedCuisines.includes(cuisine.SeoName);
@@ -188,7 +195,7 @@ export function CuisineFilter({
               );
             })}
           </div>
-        </ScrollArea>
+        </div>
       )}
 
       {selectedCuisines.length > 0 && (
