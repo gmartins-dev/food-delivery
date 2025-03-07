@@ -4,8 +4,6 @@ A modern web application that allows users to search for restaurants that delive
 
 This application follows the **PIE Design System** - Just Eat Takeaway.com's global design system for interfaces and experiences, ensuring consistency with the Just Eat brand.
 
-![Just Eat Restaurant Finder screenshot](https://i.imgur.com/example.png)
-
 ## Key features
 
 - 🍽️ Search for restaurants by outcode (first part of UK postcode)
@@ -99,43 +97,6 @@ npm run dev
 
 The application will be available at http://localhost:3000
 
-## Troubleshooting Common Issues
-
-### API Connection Issues
-
-If you're experiencing issues connecting to the Just Eat API (such as CORS errors or rate limiting), the application includes a mock data mode. This is already enabled by default in the code.
-
-The mock data can be found in `src/lib/api.ts` in the `MOCK_DATA` constant. You can modify this data to test different scenarios.
-
-### Package Installation Issues
-
-If you're having issues installing packages, try these steps:
-
-1. Clear npm cache:
-   ```bash
-   npm cache clean --force
-   ```
-
-2. Delete node_modules and reinstall:
-   ```bash
-   rm -rf node_modules
-   npm install
-   ```
-
-3. If you see specific errors about missing dependencies, try installing them individually:
-   ```bash
-   npm install <package-name>
-   ```
-
-## Building for Production
-
-```bash
-# Build the application
-npm run build
-
-# Start the production server
-npm start
-```
 
 ## API Integration Notes
 
@@ -144,8 +105,6 @@ This application interacts with the Just Eat API, which has certain limitations:
 1. **CORS Issues**: The API may not allow direct browser requests due to CORS restrictions. For a production application, you might need to set up a proxy server.
 
 2. **Rate Limiting**: The API implements rate limiting. The application handles 429 responses with exponential backoff.
-
-3. **Mock Mode**: For development and testing, the application includes a mock data mode that can be toggled in the `src/lib/api.ts` file.
 
 ## Future Improvements
 
@@ -219,15 +178,6 @@ The testing strategy for this application would include:
 
 4. **E2E Tests**: Full user flow testing with Cypress or similar
    - Complete user journey from search to filtering
-
-### Package Manager Choice
-
-For this project, I chose **npm** as the package manager because:
-
-1. **Ubiquity**: Most widely used JavaScript package manager
-2. **Stability**: Reliable dependency resolution
-3. **Lockfile**: package-lock.json provides deterministic builds
-4. **Integration**: Native integration with Node.js and excellent documentation
 
 ## Suggested API Improvements
 
