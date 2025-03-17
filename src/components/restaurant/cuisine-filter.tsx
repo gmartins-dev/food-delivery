@@ -209,7 +209,9 @@ export function CuisineFilter({
                   >
                     <div className="flex items-center gap-2">
                       <Icon className="h-4 w-4" />
-                      <span>{cuisine.Name}</span>
+                      <span data-testid={`cuisine-name-${cuisine.SeoName}`}>
+                        {cuisine.Name}
+                      </span>
                       <span className="text-xs text-neutral-500">({cuisine.Total})</span>
                     </div>
                     {isSelected && <CheckIcon className="h-4 w-4" />}
@@ -227,7 +229,10 @@ export function CuisineFilter({
             <span className="bg-primary-100 text-primary-700 dark:bg-primary-950/50 dark:text-primary-300 px-2 py-0.5 rounded-md text-xs font-semibold">
               {selectedCuisines.length}
             </span>
-            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+            <p
+              className="text-sm text-neutral-600 dark:text-neutral-400"
+              data-testid="cuisine-selection-text"
+            >
               {selectedCuisines.length === 1 ? 'cuisine' : 'cuisines'} selected
             </p>
           </div>

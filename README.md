@@ -200,3 +200,27 @@ Based on working with the Just Eat API, here are some suggested improvements:
 5. **Rate Limiting Documentation**: Clear documentation on rate limits and retry strategies would be helpful.
 
 6. **Schema Documentation**: Comprehensive OpenAPI/Swagger documentation would make integration easier.
+
+## Testing
+
+The project includes comprehensive test coverage:
+
+### Unit Tests
+```bash
+npm test
+```
+
+### Integration Tests
+```bash
+npm run test:integration
+```
+
+### End-to-End Tests
+```bash
+npm run test:e2e
+```
+
+### Test Coverage
+```bash
+npm run test:coverage
+```

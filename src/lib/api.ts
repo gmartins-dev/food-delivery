@@ -130,18 +130,35 @@ function transformResponse(response: JustEatResponse): SearchResponse {
   };
 }
 
+const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+const handleRateLimitResponse = async (response: Response): Promise<Response> => {
+  if (response.status === 429) {
+    const retryAfter = parseInt(response.headers.get('Retry-After') || '1', 10);
+    await wait(retryAfter * 1000);
+    return fetch(response.url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+  return response;
+};
+
 export async function getRestaurantsByOutcode(outcode: string): Promise<SearchResponse> {
   try {
-    const response = await fetch(`/api/restaurants?outcode=${outcode}`, {
+    let response = await fetch(`/api/restaurants?outcode=${outcode}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      cache: 'no-store'
     });
 
+    if (response.status === 429) {
+      response = await handleRateLimitResponse(response);
+    }
+
     if (!response.ok) {
-      throw new Error('Failed to fetch restaurants');
+      throw new Error(`Failed to fetch restaurants: HTTP error! status: ${response.status}`);
     }
 
     const data: JustEatResponse = await response.json();
